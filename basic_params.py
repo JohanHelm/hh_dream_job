@@ -1,6 +1,6 @@
 basic_url = "https://api.hh.ru"
-basic_headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 "
-                               "(KHTML, like Gecko) Chrome/45.0.2454.85 Safari/537.36"}
+
+basic_timeout = 3
 
 search_params = {"page": 0,
                  "per_page": 100,
@@ -11,7 +11,7 @@ search_params = {"page": 0,
                  # "schedule":  ("fullDay", "shift", "flexible", "remote"),
                  # "area": 113,  # Russia 113, Tomsk area 1255, Tomsk 90,
                  # "professional_role": (96, 160, 124, 112, 113, 121),
-                 # "period": 30
+                 # "period": 30,
                  "order_by": "publication_time",
                  }
 
@@ -30,7 +30,8 @@ def create_response_letter(vacancy_url: str, vacancy_name: str, ):
            f"С 2020 года я начал самостоятельное обучение, по таким IT дисциплинам как информатика, сети, " \
            f"linux, bash, python. Благодаря моей самодисциплине, организованности и целеустремлённости я достиг " \
            f"заметных результатов в освоении новой профессии." \
-           f"Я уверен, что моя предыдущая профессиональная подготовка в области химических производств и новые навыки, " \
+           f"Я уверен, что моя предыдущая профессиональная подготовка " \
+           f"в области химических производств и новые навыки, " \
            f"которые я приобрел, помогут мне эффективно выполнять задачи в вашей компании.\n\n" \
            f"Прикладываю своё резюме. С моими проектами на гитхабе можно ознакомиться " \
            f"по ссылке https://github.com/JohanHelm\n"  \
@@ -38,6 +39,3 @@ def create_response_letter(vacancy_url: str, vacancy_name: str, ):
            f"Так же я готов выполнить любое тестовое задание." \
            f"Буду рад любой обратной связи.\n\n" \
            f"До свидания:)"
-
-
-print(create_response_letter(vacancy_url="some_url", vacancy_name="some name"))
