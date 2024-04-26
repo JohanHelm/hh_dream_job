@@ -33,15 +33,18 @@ class TokensHandler:
                   "refresh_token": self.tokens["refresh_token"]
                   }
         self.api_client.set_session_params(params)
-        response: Response = self.api_client.safe_get("POST", self.url)
-        if response == 200:
+        response: Response = self.api_client.safe_querry("POST", self.url)
+        if response.status_code == 200:
             self.save_tokens(response)
             self.api_client.update_session_headers()
             logger.info("access token been successfully updated")
-        elif response in (400, 403):
-            logger.warning(f"failure to update tokens")
+        elif response.status_code in (400, 403):
+            logger.warning(f"failure to update tokens with response {response}")
             with open('update_token_errors.json', 'w') as file:
                 file.write(response.json())
+            quit()
+        else:
+            logger.warning(f"failure to update tokens with response {response}")
             quit()
 
     def give_valid_access_token(self) -> bool:
@@ -51,5 +54,3 @@ class TokensHandler:
             logger.info("access token got old, trying to refresh it")
             sleep(60)
             self.update_tokens()
-
-

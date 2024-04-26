@@ -22,19 +22,19 @@ class ApiClient:
     def set_session_params(self, params):
         self.session.params = params
 
-    def unsafe_get(self, method: str, url: str) -> Response:
+    def unsafe_querry(self, method: str, url: str) -> Response:
         responce: Response = self.session.request(method,
                                                   url,
                                                   timeout=basic_timeout,
                                                   allow_redirects=False)
         return responce
 
-    def safe_get(self, method: str, url: str) -> Response | None:
+    def safe_querry(self, method: str, url: str) -> Response | None:
         logger.info(f"Try get data from {url}, with {method}")
         try:
             for attempt in self.retry_manager.make_retry():
                 with attempt:
-                    response: Response = self.unsafe_get(method, url)
+                    response: Response = self.unsafe_querry(method, url)
                     return response
         except self.retry_error:
             logger.warning(f"out of retries with {method} request to {url}")
