@@ -4,7 +4,7 @@ from time import sleep
 from loguru import logger
 
 from api_requests.api_query import ApiClient
-from tokens import tokens
+from secrets.tokens import tokens
 from basic_params import basic_url
 
 
@@ -19,7 +19,7 @@ class TokensHandler:
         expires_at = datetime.timestamp(datetime.utcnow()) + tokens["expires_in"]
         tokens["expires_at"] = expires_at
         self.tokens = tokens
-        file_with_tokens = f'tokens.py'
+        file_with_tokens = f'secrets/tokens.py'
         with open(file_with_tokens, 'w', encoding='utf-8') as file:
             file.write(f'tokens = {self.tokens}')
         logger.info("new token saved to file")
@@ -32,12 +32,14 @@ class TokensHandler:
         params = {"grant_type": "refresh_token",
                   "refresh_token": self.tokens["refresh_token"]
                   }
-        response: Response = self.api_client.safe_get("POST", self.url, params=params)
+        self.api_client.set_session_params(params)
+        response: Response = self.api_client.safe_get("POST", self.url)
         if response == 200:
             self.save_tokens(response)
             self.api_client.update_session_headers()
             logger.info("access token been successfully updated")
         elif response in (400, 403):
+            logger.warning(f"failure to update tokens")
             with open('update_token_errors.json', 'w') as file:
                 file.write(response.json())
             quit()
@@ -49,3 +51,5 @@ class TokensHandler:
             logger.info("access token got old, trying to refresh it")
             sleep(60)
             self.update_tokens()
+
+

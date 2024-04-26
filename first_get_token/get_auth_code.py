@@ -2,7 +2,7 @@ import time
 
 from selenium import webdriver
 
-from secrets import client_id
+from secrets.client_secrets import client_id
 
 options_chrome = webdriver.ChromeOptions()
 options_chrome.add_argument('--user-data-dir=/home/pp/.config/google-chrome/Default')
