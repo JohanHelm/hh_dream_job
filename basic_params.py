@@ -1,3 +1,8 @@
+from pathlib import Path
+
+
+workdir: Path = Path(__file__).resolve().parent
+
 basic_url = "https://api.hh.ru"
 
 basic_timeout = 3

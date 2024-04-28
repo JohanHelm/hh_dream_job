@@ -1,13 +1,13 @@
 import json
 import pickle
+from pathlib import Path
 from requests import Response
 from loguru import logger
 from datetime import datetime
 
 from api_requests.api_query import ApiClient
-from basic_params import search_params, basic_url, create_response_letter
+from basic_params import search_params_1, basic_url, create_response_letter, workdir
 from secrets.client_secrets import resume_id
-from database import Database
 
 
 class VacancyManager:
@@ -20,10 +20,10 @@ class VacancyManager:
         self.apply_limit: int = 195
         self.api_client: ApiClient = api_client
         self.vacancy_list: list[dict] = []
-        self.db = Database("dream_job.db")
+        self.applied_set: set[str] = set()
 
     def search_similar_vacancy(self):
-        self.api_client.set_session_params(search_params)
+        self.api_client.set_session_params(search_params_1)
         response: Response = self.api_client.safe_querry("GET", self.url_for_similar_search)
         if response.status_code == 200:
             result = response.json()
@@ -39,7 +39,7 @@ class VacancyManager:
             logger.warning(f"failure to search_similar_vacancy with response {response}")
 
     def search_common_vacancy(self):
-        self.api_client.set_session_params(search_params)
+        self.api_client.set_session_params(search_params_1)
         response: Response = self.api_client.safe_querry("GET", self.url_for_common_search)
         if response.status_code == 200:
             result = response.json()
@@ -54,24 +54,44 @@ class VacancyManager:
         else:
             logger.warning(f"failure to search_common_vacancy with response {response}")
 
-    def remove_has_test(self):
-        self.vacancy_list = list(filter(lambda x: not x["has_test"], self.vacancy_list))
-        logger.info(f"without test we got {len(self.vacancy_list)} vacancies")
-
     def remove_already_applied(self):
-        already_applied = [item[0] for item in self.db.get_already_applied()]
-        self.vacancy_list = list(filter(lambda x: int(x["id"]) not in already_applied, self.vacancy_list))
+        self.vacancy_list = list(filter(lambda x: x["id"] not in self.applied_set, self.vacancy_list))
         logger.info(f"we got {len(self.vacancy_list)} not applied vacancies yet")
 
-    def pickle_vacancies(self):
-        with open("vacancies.pickle", "wb") as file:
-            pickle.dump(self.vacancy_list, file)
-            logger.info(f"save binary file vacancies.pickle")
+    def add_to_favorite_with_test(self):
+        vacancy_to_add = list(filter(lambda x: x["has_test"], self.vacancy_list))
+        logger.info(f" we got {len(vacancy_to_add)} vacancies with test")
+        self.api_client.set_session_params({})
+        for vacancy in vacancy_to_add:
+            url = f"{basic_url}/vacancies/favorited/{vacancy['id']}"
+            response: Response = self.api_client.safe_querry("PUT", url)
+            if response.status_code == 204:
+                logger.info(f"vacancy with id {vacancy['id']} added to favorite")
+                self.applied_set.add(vacancy['id'])
+            elif response.status_code in (403, 404):
+                logger.warning(f"fail to add {vacancy['id']} to favorites")
+                with open('add_to_favorite_with_test_errors.json', 'w') as file:
+                    file.write(str(datetime.utcnow()))
+                    json.dump(response.json(), file, separators=(',\n', ': '))
+                    file.write("\n\n")
+            else:
+                logger.warning(f"fail to add {vacancy['id']} to favorites")
+        self.vacancy_list = list(filter(lambda x: not x["has_test"], self.vacancy_list))
 
-    def unpickle_vacancies(self):
-        with open("vacancies.pickle", "rb") as file:
-            logger.info(f"open binary file vacancies.pickle")
-            self.vacancy_list = pickle.load(file)
+    def pickle_applied(self):
+        filename = f"applied.pickle"
+        fullfilepath = workdir.joinpath(filename)
+        with open(fullfilepath, "wb") as file:
+            pickle.dump(self.applied_set, file)
+            logger.info(f"save binary file {fullfilepath}")
+
+    def unpickle_applied(self):
+        filename = f"applied.pickle"
+        fullfilepath = workdir.joinpath(filename)
+        if Path.exists(fullfilepath):
+            with open(fullfilepath, "rb") as file:
+                logger.info(f"open binary file {fullfilepath}")
+                self.applied_set = pickle.load(file)
 
     def apply_without_letter(self):
         params = {"resume_id": resume_id}
@@ -82,7 +102,7 @@ class VacancyManager:
             response: Response = self.api_client.safe_querry("POST", self.url_for_apply)
             if response.status_code == 201:
                 self.apply_counter += 1
-                self.db.add_vacancy_id(vacancy["id"])
+                self.applied_set.add(vacancy['id'])
                 if self.apply_counter == self.apply_limit:
                     logger.info(f"exceed apply limit for today")
                     break
@@ -108,7 +128,7 @@ class VacancyManager:
             response: Response = self.api_client.safe_querry("POST", self.url_for_apply)
             if response.status_code == 201:
                 self.apply_counter += 1
-                self.db.add_vacancy_id(vacancy["id"])
+                self.applied_set.add(vacancy['id'])
                 if self.apply_counter == self.apply_limit:
                     logger.info(f"exceed apply limit for today")
                     break
@@ -122,5 +142,3 @@ class VacancyManager:
             else:
                 logger.warning(f"failure to appy_with_letter vacancy {vacancy['id']} with response {response}")
         logger.info(f"total appy_with_letter is {self.apply_counter}")
-
-
