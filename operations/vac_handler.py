@@ -15,6 +15,7 @@ class VacancyManager:
         self.url_for_apply = f"{basic_url}/negotiations"
         self.url_for_similar_search = f"{basic_url}/resumes/{resume_id}/similar_vacancies"
         self.url_for_common_search = f"{basic_url}/vacancies"
+        self.search_iteration: int = 1
         self.apply_counter: int = 0
         self.apply_limit: int = 195
         self.api_client: ApiClient = api_client
@@ -36,6 +37,22 @@ class VacancyManager:
                 file.write("\n\n")
         else:
             logger.warning(f"failure to search_similar_vacancy with response {response}")
+
+    def search_common_vacancy(self):
+        self.api_client.set_session_params(search_params)
+        response: Response = self.api_client.safe_querry("GET", self.url_for_common_search)
+        if response.status_code == 200:
+            result = response.json()
+            logger.info(f"found by common search {result['found']} vacancies")
+            self.vacancy_list = result["items"]
+        elif response.status_code in (400, 404):
+            logger.warning(f"failure to search_common_vacancy with response {response}")
+            with open('search_common_vacancy_errors.json', 'w') as file:
+                file.write(str(datetime.utcnow()))
+                json.dump(response.json(), file, separators=(',\n', ': '))
+                file.write("\n\n")
+        else:
+            logger.warning(f"failure to search_common_vacancy with response {response}")
 
     def remove_has_test(self):
         self.vacancy_list = list(filter(lambda x: not x["has_test"], self.vacancy_list))
@@ -105,3 +122,5 @@ class VacancyManager:
             else:
                 logger.warning(f"failure to appy_with_letter vacancy {vacancy['id']} with response {response}")
         logger.info(f"total appy_with_letter is {self.apply_counter}")
+
+

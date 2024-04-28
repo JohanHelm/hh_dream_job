@@ -1,3 +1,4 @@
+import json
 from requests import Response
 from datetime import datetime
 from time import sleep
@@ -41,16 +42,16 @@ class TokensHandler:
         elif response.status_code in (400, 403):
             logger.warning(f"failure to update tokens with response {response}")
             with open('update_token_errors.json', 'w') as file:
-                file.write(response.json())
+                file.write(str(datetime.utcnow()))
+                json.dump(response.json(), file, separators=(',\n', ': '))
+                file.write("\n\n")
             quit()
         else:
             logger.warning(f"failure to update tokens with response {response}")
             quit()
 
-    def check_valid_access_token(self) -> bool:
-        if self.valid_tokens():
-            return True
-        else:
+    def check_valid_access_token(self):
+        if not self.valid_tokens():
             logger.info("access token got old, trying to refresh it")
             sleep(60)
             self.update_tokens()
