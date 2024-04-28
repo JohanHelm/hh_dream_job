@@ -10,6 +10,6 @@ class Database:
         with self.connection:
             self.cursor.execute("INSERT INTO allready_applyed ('id') VALUES (?)", (vacancy_id, ))
 
-    def get_all_applied(self):
+    def get_already_applied(self):
         with self.connection:
             return self.cursor.execute("SELECT id FROM allready_applyed").fetchall()
