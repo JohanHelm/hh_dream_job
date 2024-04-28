@@ -47,7 +47,7 @@ class TokensHandler:
             logger.warning(f"failure to update tokens with response {response}")
             quit()
 
-    def give_valid_access_token(self) -> bool:
+    def check_valid_access_token(self) -> bool:
         if self.valid_tokens():
             return True
         else:
