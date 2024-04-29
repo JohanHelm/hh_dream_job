@@ -1,8 +1,7 @@
-import requests
 from requests import Response, Session
 from secrets.client_secrets import resume_id
 from secrets.tokens import tokens
-from utils.basic_params import *
+
 
 url = f"https://api.hh.ru/resumes/{resume_id}/similar_vacancies"
 # url = "https://api.hh.ru/vacancies"
@@ -11,11 +10,19 @@ headers = {
     'Authorization': f'Bearer {tokens["access_token"]}',
 }
 
+search_params_1 = {"page": 0,
+                   "per_page": 100,
+                   "text": "Python",
+                   "search_field": ("name", "description"),
+                   "experience": ("noExperience", "between1And3"),
+                   "order_by": "publication_time",
+                   }
+
 session = Session()
 # print(session.__dict__)
 session.headers.update(headers)
 # print(session.__dict__)
-session.params = search_params_3
+session.params = search_params_1
 # print(session.__dict__)
 # session.__delattr__("params")
 # print(session.__dict__)

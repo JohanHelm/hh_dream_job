@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-workdir: Path = Path(__file__).resolve().parent
+workdir: Path = Path(__file__).resolve().parent.parent
 
 basic_url = "https://api.hh.ru"
 
