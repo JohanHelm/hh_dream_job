@@ -109,10 +109,13 @@ class ApplicantManager:
                 if self.apply_counter == self.apply_limit:
                     logger.info(f"exceed apply limit for today")
                     break
-            elif response.status_code == 403:
+            elif response.status_code in (403, 400):
                 result = response.json()
                 if result["description"] == "Already applied":
                     self.applied_set.add(vacancy['id'])
+                elif result["description"] == "Daily negotiations limit is exceeded":
+                    logger.warning(f"we got out of applies for today!!!")
+                    quit()
                 else:
                     logger.warning(f"failure to appy vacancy {vacancy['id']} with response {response}")
                     with open('apply_errors.json', 'a') as file:
@@ -120,16 +123,9 @@ class ApplicantManager:
                         file.write(f"{vacancy['id']}\n")
                         json.dump(result, file, separators=(',\n', ': '))
                         file.write("\n\n")
-            elif response.status_code == 400:
-                logger.warning(f"failure to appy vacancy {vacancy['id']} with response {response}")
-                with open('appy_errors.json', 'a') as file:
-                    file.write(f"{datetime.utcnow()}\n")
-                    file.write(f"{vacancy['id']}\n")
-                    json.dump(response.json(), file, separators=(',\n', ': '))
-                    file.write("\n\n")
             else:
-                logger.warning(f"failure to appy vacancy {vacancy['id']} with response {response}")
-        logger.info(f"total apply is {self.apply_counter}")
+                logger.warning(f"failure to apply vacancy {vacancy['id']} with response {response}")
+        logger.info(f"total apply with {letter} letter is {self.apply_counter}")
 
     def normal_sequence(self, params: Params):
         self.search_vacancy(params)
