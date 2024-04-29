@@ -3,7 +3,7 @@ from requests import Response
 from datetime import datetime
 
 from secrets.client_secrets import client_secret, client_id
-from basic_params import basic_url
+from utils.basic_params import basic_url
 
 
 def save_tokens(self, response: Response):

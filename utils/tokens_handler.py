@@ -6,7 +6,7 @@ from loguru import logger
 
 from api_requests.api_query import ApiClient
 from secrets.tokens import tokens
-from basic_params import basic_url
+from utils.basic_params import basic_url
 
 
 class TokensHandler:

@@ -6,53 +6,39 @@ from loguru import logger
 from datetime import datetime
 
 from api_requests.api_query import ApiClient
-from basic_params import search_params_1, basic_url, create_response_letter, workdir
+from utils.basic_params import basic_url, create_response_letter, workdir
 from secrets.client_secrets import resume_id
+from applicant_params import applicant_params, Params
 
 
-class VacancyManager:
+class ApplicantManager:
     def __init__(self, api_client):
         self.url_for_apply = f"{basic_url}/negotiations"
-        self.url_for_similar_search = f"{basic_url}/resumes/{resume_id}/similar_vacancies"
-        self.url_for_common_search = f"{basic_url}/vacancies"
-        self.search_iteration: int = 1
+        self.search_iteration: int = 0
+        self.pages_found: int | None = None
         self.apply_counter: int = 0
         self.apply_limit: int = 195
         self.api_client: ApiClient = api_client
         self.vacancy_list: list[dict] = []
         self.applied_set: set[str] = set()
+        self.unpickle_applied()
 
-    def search_similar_vacancy(self):
-        self.api_client.set_session_params(search_params_1)
-        response: Response = self.api_client.safe_querry("GET", self.url_for_similar_search)
+    def search_vacancy(self, params: Params):
+        self.api_client.set_session_params(params.search_params)
+        response: Response = self.api_client.safe_querry("GET", params.search_url)
         if response.status_code == 200:
             result = response.json()
-            logger.info(f"found by similar search {result['found']} vacancies")
+            logger.info(f"found by {params.search_mode} search {result['found']} vacancies")
+            self.pages_found = result["pages"]
             self.vacancy_list = result["items"]
         elif response.status_code in (400, 404):
-            logger.warning(f"failure to search_similar_vacancy with response {response}")
-            with open('search_similar_vacancy_errors.json', 'w') as file:
+            logger.warning(f"failure to search in {params.search_mode} with response {response}")
+            with open(f'search_{params.search_mode}_vacancy_errors.json', 'w') as file:
                 file.write(str(datetime.utcnow()))
                 json.dump(response.json(), file, separators=(',\n', ': '))
                 file.write("\n\n")
         else:
-            logger.warning(f"failure to search_similar_vacancy with response {response}")
-
-    def search_common_vacancy(self):
-        self.api_client.set_session_params(search_params_1)
-        response: Response = self.api_client.safe_querry("GET", self.url_for_common_search)
-        if response.status_code == 200:
-            result = response.json()
-            logger.info(f"found by common search {result['found']} vacancies")
-            self.vacancy_list = result["items"]
-        elif response.status_code in (400, 404):
-            logger.warning(f"failure to search_common_vacancy with response {response}")
-            with open('search_common_vacancy_errors.json', 'w') as file:
-                file.write(str(datetime.utcnow()))
-                json.dump(response.json(), file, separators=(',\n', ': '))
-                file.write("\n\n")
-        else:
-            logger.warning(f"failure to search_common_vacancy with response {response}")
+            logger.warning(f"failure to search in {params.search_mode} with response {response}")
 
     def remove_already_applied(self):
         self.vacancy_list = list(filter(lambda x: x["id"] not in self.applied_set, self.vacancy_list))
@@ -142,3 +128,14 @@ class VacancyManager:
             else:
                 logger.warning(f"failure to appy_with_letter vacancy {vacancy['id']} with response {response}")
         logger.info(f"total appy_with_letter is {self.apply_counter}")
+
+    def normal_sequence(self, params: Params):
+        self.search_vacancy(params)
+        self.remove_already_applied()
+        self.add_to_favorite_with_test()
+        self.apply_without_letter()
+        self.apply_with_letter()
+        self.pickle_applied()
+
+
+

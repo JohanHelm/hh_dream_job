@@ -4,7 +4,7 @@ from requests.models import Response
 
 from secrets.tokens import tokens
 from api_requests.retry import RetryManager
-from basic_params import basic_timeout
+from utils.basic_params import basic_timeout
 
 
 class ApiClient:
