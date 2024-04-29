@@ -11,7 +11,7 @@ Group=root
 
 WorkingDirectory=/root/job_bot
 ExecStart=/root/job_bot/venv/bin/python /root/job_bot/main.py
-Restart=always
+# Restart=always
 
 StandardOutput=file:/root/job_bot/logs/stdout.log
 StandardError=file:/root/job_bot/logs/stderr.log
