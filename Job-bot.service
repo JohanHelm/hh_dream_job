@@ -1,0 +1,21 @@
+[Unit]
+Description=job apply bot
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+
+User=root
+Group=root
+
+WorkingDirectory=/root/job_bot
+ExecStart=/root/job_bot/venv/bin/python /root/job_bot/main.py
+Restart=always
+
+StandardOutput=file:/root/job_bot/logs/stdout.log
+StandardError=file:/root/job_bot/logs/stderr.log
+SyslogIdentifier=job_bot
+
+[Install]
+WantedBy=default.target

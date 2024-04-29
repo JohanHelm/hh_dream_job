@@ -1,0 +1,10 @@
+[Unit]
+Description=start Job-bot.service
+Requires=Job-bot.service
+
+[Timer]
+Unit=Job-bot.service
+OnCalendar=*-*-* 3:00:00
+
+[Install]
+WantedBy=timers.target
