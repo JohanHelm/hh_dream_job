@@ -115,7 +115,7 @@ class ApplicantManager:
                     self.applied_set.add(vacancy['id'])
                 else:
                     logger.warning(f"failure to appy vacancy {vacancy['id']} with response {response}")
-                    with open('appy_errors.json', 'a') as file:
+                    with open('apply_errors.json', 'a') as file:
                         file.write(f"{datetime.utcnow()}\n")
                         file.write(f"{vacancy['id']}\n")
                         json.dump(result, file, separators=(',\n', ': '))
