@@ -24,7 +24,7 @@ headers = {'Authorization': f'Bearer {tokens["access_token"]}'}
 
 search_params_1 = {"page": 0,
                    "per_page": 100,
-                   "text": "IT школа Hello world",
+                   "text": "DocuSketch",
                    "search_field": "company_name",
                    # "experience": ("noExperience", "between1And3"),
                    # "order_by": "publication_time",
@@ -59,7 +59,12 @@ bad_company_names = ('Компьютерная Академия Top',
                      'EasyCode',
                      'Skyeng',
                      'LATOKEN',
-                     'IT школа Hello world'
+                     'IT школа Hello world',
+                     'Хэппи Студент',
+                     'ДИСЕНТ',
+                     'Таранюк Виталий Геннадьевич',
+                     'Nexpanse',
+                     'DocuSketch'
                      )
 
 for vacancy in result["items"]:
@@ -75,5 +80,3 @@ print(len(bad_companies_set))
 
 with open(fullfilepath, "wb") as file:
     pickle.dump(bad_companies_set, file)
-
-

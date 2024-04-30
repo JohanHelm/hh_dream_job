@@ -43,6 +43,7 @@ search_params_2 = {"page": 0,
                    "search_field": ("name", "description"),
                    "experience": ("noExperience", "between1And3"),
                    "area": 1255,
+                   "professional_role": (96, 160, 124),
                    "order_by": "publication_time",
                    }
 
@@ -52,13 +53,27 @@ search_params_3 = {"page": 0,
                    "text": "Python",
                    "search_field": ("name", "description"),
                    "experience": ("noExperience", "between1And3"),
+                   "employment": ("full", "part", "project"),
                    "schedule": ("flexible", "remote"),
                    "professional_role": 96,
+                   "order_by": "publication_time",
+                   }
+
+# third common search
+search_params_4 = {"page": 0,
+                   "per_page": 100,
+                   "text": "Python",
+                   "search_field": ("name", "description"),
+                   "experience": ("noExperience", "between1And3"),
+                   "employment": ("full", "part", "project"),
+                   "schedule": ("flexible", "remote"),
+                   "professional_role": (160, 124),
                    "order_by": "publication_time",
                    }
 
 
 applicant_params = (Params("similar", similar_search_url, search_params_1),
                     Params("common", common_search_url, search_params_2),
-                    Params("common", common_search_url, search_params_3)
+                    Params("common", common_search_url, search_params_3),
+                    Params("common", common_search_url, search_params_4)
                     )
