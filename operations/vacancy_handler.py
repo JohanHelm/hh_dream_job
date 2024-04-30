@@ -23,8 +23,6 @@ class ApplicantManager:
         self.vacancy_list: list[dict] = []
         self.applied_set: set[str] = set()
         self.bad_companies: set[str] = set()
-        self.unpickle_applied()
-        self.unpickle_bad_companies()
 
     def search_vacancy(self, params: Params):
         self.api_client.set_session_params(params.search_params)
@@ -128,6 +126,8 @@ class ApplicantManager:
         logger.info(f"total apply with {letter} letter is {self.apply_counter}")
 
     def normal_sequence(self, params: Params):
+        self.unpickle_applied()
+        self.unpickle_bad_companies()
         self.search_vacancy(params)
         self.remove_already_applied()
         self.remove_bad_companies()

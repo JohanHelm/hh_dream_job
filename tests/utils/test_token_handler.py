@@ -1,5 +1,3 @@
-import pytest
-
 from api_requests.api_querry import ApiClient
 from secrets.tokens import tokens
 from utils.basic_params import basic_url
