@@ -1,9 +1,13 @@
-from api_requests.retry import RetryManager
+from api_requests.api_querry import ApiClient
+from utils.tokens_handler import TokensHandler
+from secrets.tokens import tokens
+from utils.basic_params import basic_url
 
-retry_manager: RetryManager = RetryManager()
+api_client = ApiClient()
+tokens_handler = TokensHandler(api_client)
+attributes = tokens_handler.__dict__
 
-for attempt in retry_manager.make_retry():
-    with attempt:
-        print(attempt)
-        raise Exception
+print(attributes)
+
+assert isinstance(attributes["api_client"], ApiClient) and attributes["tokens"] == tokens and attributes["url"] == f"{basic_url}/token"
 

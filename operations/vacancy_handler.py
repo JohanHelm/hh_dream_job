@@ -6,7 +6,7 @@ from pathlib import Path
 from loguru import logger
 from requests import Response
 
-from api_requests.api_query import ApiClient
+from api_requests.api_querry import ApiClient
 from operations.applicant_params import Params, applicant_params
 from secrets.client_secrets import resume_id
 from utils.basic_params import basic_url, create_response_letter, workdir
