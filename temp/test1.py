@@ -1,12 +1,9 @@
-a = True
-b = True
-c = False
-d = False
+from api_requests.retry import RetryManager
 
-print(a == b)
-print(a is b)
-print(b is not c)
-print(d is c)
+retry_manager: RetryManager = RetryManager()
 
-for i in range(0):
-    print(i)
+for attempt in retry_manager.make_retry():
+    with attempt:
+        print(attempt)
+        raise Exception
+
