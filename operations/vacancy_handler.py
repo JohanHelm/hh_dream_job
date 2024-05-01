@@ -141,11 +141,16 @@ class ApplicantManager:
         self.unpickle_bad_companies()
         while self.apply_counter < self.apply_limit:
             logger.info(f"starting {self.search_step} step with {self.apply_counter} apply_counter")
-            params = applicant_params[self.search_step]
-            for page in range(self.pages_found):
-                logger.info(f"searching on page {page}")
-                params.search_params["page"] = page
-                self.normal_sequence(params)
-            self.search_step += 1
+            try:
+                params = applicant_params[self.search_step]
+            except IndexError:
+                logger.warning(f"applicant_params is too short, need much more!!!")
+                break
+            else:
+                for page in range(self.pages_found):
+                    logger.info(f"searching on page {page}")
+                    params.search_params["page"] = page
+                    self.normal_sequence(params)
+                self.search_step += 1
         self.pickle_applied()
         logger.info(f"bot finish working with {self.search_step} step and {self.apply_counter} apply_counter")
