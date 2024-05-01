@@ -83,6 +83,7 @@ class ApplicantManager:
             with open(fullfilepath, "rb") as file:
                 logger.info(f"open binary file {fullfilepath}")
                 self.applied_set = pickle.load(file)
+        logger.info(f"we got {len(self.applied_set)} already applied vacancies")
 
     def unpickle_bad_companies(self):
         filename = f"bad_companies.pickle"
@@ -91,6 +92,7 @@ class ApplicantManager:
             with open(fullfilepath, "rb") as file:
                 logger.info(f"open binary file {fullfilepath}")
                 self.bad_companies = pickle.load(file)
+        logger.info(f"we got {len(self.bad_companies)} bad companies for now")
 
     def apply(self, letter: bool = False):
         self.api_client.set_session_params({"resume_id": resume_id})
