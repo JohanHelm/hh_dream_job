@@ -54,4 +54,6 @@ class TokensHandler:
             logger.info("access token got old, trying to refresh it")
             sleep(60)
             token_valid = self.update_tokens()
+        else:
+            logger.info("access token is still alive, keep using it")
         return token_valid
