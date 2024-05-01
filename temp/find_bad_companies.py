@@ -22,24 +22,21 @@ print(len(bad_companies_set))
 url = "https://api.hh.ru/vacancies"
 headers = {'Authorization': f'Bearer {tokens["access_token"]}'}
 
-search_params_1 = {"page": 0,
+search_params = {"page": 0,
                    "per_page": 100,
                    "text": "JustCode",
                    "search_field": "company_name",
-                   # "experience": ("noExperience", "between1And3"),
-                   # "order_by": "publication_time",
                    }
 
 session = Session()
 session.headers.update(headers)
-session.params = search_params_1
-
+session.params = search_params
 
 response: Response = session.get(url)
 result = response.json()
 vacancies = result["items"]
 print(result["found"])
-# print(result)
+
 bad_company_names = ('Компьютерная Академия Top',
                      'Компьютерная Академия IT STEP',
                      'Школа программирования JETCODE',
@@ -71,7 +68,6 @@ bad_company_names = ('Компьютерная Академия Top',
 for vacancy in result["items"]:
     print(vacancy['employer'])
     print(vacancy['name'])
-#     print(vacancy['employer']['name'])
     print()
     if vacancy['employer']['name'] in bad_company_names:
         bad_companies_set.add(vacancy['employer']['id'])
