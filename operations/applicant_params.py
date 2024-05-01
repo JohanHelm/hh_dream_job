@@ -36,8 +36,16 @@ search_params_1 = {"page": 0,
                    "order_by": "publication_time",
                    }
 
-# first common search
+# params for similar search
 search_params_2 = {"page": 0,
+                   "per_page": 100,
+                   "professional_role": (96, 160, 124),
+                   "experience": ("noExperience", "between1And3"),
+                   "order_by": "publication_time",
+                   }
+
+# first common search
+search_params_3 = {"page": 0,
                    "per_page": 100,
                    "text": "Python",
                    "search_field": ("name", "description"),
@@ -48,7 +56,7 @@ search_params_2 = {"page": 0,
                    }
 
 # second common search
-search_params_3 = {"page": 0,
+search_params_4 = {"page": 0,
                    "per_page": 100,
                    "text": "Python",
                    "search_field": ("name", "description"),
@@ -60,7 +68,7 @@ search_params_3 = {"page": 0,
                    }
 
 # third common search
-search_params_4 = {"page": 0,
+search_params_5 = {"page": 0,
                    "per_page": 100,
                    "text": "Python",
                    "search_field": ("name", "description"),
@@ -73,7 +81,8 @@ search_params_4 = {"page": 0,
 
 
 applicant_params = (Params("similar", similar_search_url, search_params_1),
-                    Params("common", common_search_url, search_params_2),
+                    Params("similar", similar_search_url, search_params_2),
                     Params("common", common_search_url, search_params_3),
-                    Params("common", common_search_url, search_params_4)
+                    Params("common", common_search_url, search_params_4),
+                    Params("common", common_search_url, search_params_5)
                     )
