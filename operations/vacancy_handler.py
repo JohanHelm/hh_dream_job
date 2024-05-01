@@ -113,7 +113,7 @@ class ApplicantManager:
                     self.applied_set.add(vacancy['id'])
                 elif result["description"] == "Daily negotiations limit is exceeded":
                     logger.warning(f"we got out of applies for today!!!")
-                    quit()
+                    self.apply_counter = self.apply_limit
                 else:
                     logger.warning(f"failure to appy vacancy {vacancy['id']} with response {response}")
                     with open('apply_errors.json', 'a') as file:
@@ -126,17 +126,16 @@ class ApplicantManager:
         logger.info(f"total apply with {letter} letter is {self.apply_counter}")
 
     def normal_sequence(self, params: Params):
-        self.unpickle_applied()
-        self.unpickle_bad_companies()
         self.search_vacancy(params)
         self.remove_already_applied()
         self.remove_bad_companies()
         self.add_to_favorite_with_test()
         self.apply()
         self.apply(letter=True)
-        self.pickle_applied()
 
     def run(self):
+        self.unpickle_applied()
+        self.unpickle_bad_companies()
         while self.apply_counter < self.apply_limit:
             logger.info(f"starting {self.search_step} step with {self.apply_counter} apply_counter")
             params = applicant_params[self.search_step]
@@ -145,5 +144,5 @@ class ApplicantManager:
                 params.search_params["page"] = page
                 self.normal_sequence(params)
             self.search_step += 1
-
+        self.pickle_applied()
         logger.info(f"bot finish working with {self.search_step} step and {self.apply_counter} apply_counter")

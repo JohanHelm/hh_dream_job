@@ -7,6 +7,16 @@ basic_url = "https://api.hh.ru"
 
 basic_timeout = 3
 
+
+def duration(start, end):
+    seconds = end - start
+    hours = int(seconds // 3600)
+    seconds %= 3600
+    minutes = int(seconds // 60)
+    seconds = int(seconds % 60)
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
+
 def create_response_letter(vacancy_url: str, vacancy_name: str, ):
     return f"Здравствуйте,\n\nМеня зовут Александр, я Python Backend Developer. " \
            f"Я пишу вам, чтобы выразить свой интерес к вакансии {vacancy_name}, " \
