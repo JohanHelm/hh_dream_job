@@ -114,6 +114,7 @@ class ApplicantManager:
                 elif result["description"] == "Daily negotiations limit is exceeded":
                     logger.warning(f"we got out of applies for today!!!")
                     self.apply_counter = self.apply_limit
+                    break
                 else:
                     logger.warning(f"failure to appy vacancy {vacancy['id']} with response {response}")
                     with open('apply_errors.json', 'a') as file:
