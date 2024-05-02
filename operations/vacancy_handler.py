@@ -147,10 +147,12 @@ class ApplicantManager:
                 logger.warning(f"applicant_params is too short, need much more!!!")
                 break
             else:
-                for page in range(self.pages_found):
-                    logger.info(f"searching on page {page}")
-                    params.search_params["page"] = page
-                    self.normal_sequence(params)
+                self.normal_sequence(params)
+                if self.pages_found > 1:
+                    for page in range(1, self.pages_found):
+                        logger.info(f"searching on page {page}")
+                        params.search_params["page"] = page
+                        self.normal_sequence(params)
                 self.search_step += 1
         self.pickle_applied()
         logger.info(f"bot finish working with {self.search_step} step and {self.apply_counter} apply_counter")

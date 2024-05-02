@@ -24,7 +24,7 @@ headers = {'Authorization': f'Bearer {tokens["access_token"]}'}
 
 search_params = {"page": 0,
                    "per_page": 100,
-                   "text": "JustCode",
+                   "text": "Центр финансовых технологий",
                    "search_field": "company_name",
                    }
 
@@ -62,7 +62,8 @@ bad_company_names = ('Компьютерная Академия Top',
                      'Таранюк Виталий Геннадьевич',
                      'Nexpanse',
                      'DocuSketch',
-                     'JustCode'
+                     'JustCode',
+                     'Центр финансовых технологий'
                      )
 
 for vacancy in result["items"]:

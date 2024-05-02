@@ -18,6 +18,7 @@ response: Response = session.get(url)
 result = response.json()
 vacancies = result["items"]
 print(result["found"])
+print(result["pages"])
 
 for vacancy in result["items"]:
     print(vacancy['name'])
