@@ -75,6 +75,7 @@ class ApplicantManager:
         with open(fullfilepath, "wb") as file:
             pickle.dump(self.applied_set, file)
             logger.info(f"save binary file {fullfilepath}")
+        logger.info(f"we got {len(self.applied_set)} already applied vacancies after bot working")
 
     def unpickle_applied(self):
         filename = f"applied.pickle"
@@ -83,7 +84,7 @@ class ApplicantManager:
             with open(fullfilepath, "rb") as file:
                 logger.info(f"open binary file {fullfilepath}")
                 self.applied_set = pickle.load(file)
-        logger.info(f"we got {len(self.applied_set)} already applied vacancies")
+        logger.info(f"we got {len(self.applied_set)} already applied vacancies before bot working")
 
     def unpickle_bad_companies(self):
         filename = f"bad_companies.pickle"
