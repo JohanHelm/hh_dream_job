@@ -1,7 +1,7 @@
 from collections import namedtuple
 
-from utils.basic_params import basic_url
 from secrets.client_secrets import resume_id
+from utils.basic_params import basic_url
 
 Params = namedtuple('Params', ('search_mode', 'search_url', 'search_params'))
 
@@ -14,7 +14,7 @@ full_search_params = {"page": 0,
                       "search_field": ("name", "description"),
                       "experience": ("noExperience", "between1And3"),
                       "employment": ("full", "part", "project"),
-                      "schedule":  ("fullDay", "shift", "flexible", "remote"),
+                      "schedule": ("fullDay", "shift", "flexible", "remote"),
                       "area": 113,  # Russia 113, Tomsk area 1255, Tomsk 90,
                       "professional_role": (96, 160, 124, 112, 113, 121),
                       # {'96': 'Программист, разработчик',
@@ -79,10 +79,21 @@ search_params_5 = {"page": 0,
                    "order_by": "publication_time",
                    }
 
+# third common search
+search_params_6 = {"page": 0,
+                   "per_page": 100,
+                   "text": "Python",
+                   "search_field": ("name", "description"),
+                   "experience": ("noExperience", "between1And3"),
+                   "employment": ("full", "part", "project"),
+                   "professional_role": 96,
+                   "order_by": "publication_time",
+                   }
 
 applicant_params = (Params("similar", similar_search_url, search_params_1),
                     Params("similar", similar_search_url, search_params_2),
                     Params("common", common_search_url, search_params_3),
                     Params("common", common_search_url, search_params_4),
-                    Params("common", common_search_url, search_params_5)
+                    Params("common", common_search_url, search_params_5),
+                    Params("common", common_search_url, search_params_6),
                     )
