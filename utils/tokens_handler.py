@@ -19,6 +19,7 @@ class TokensHandler:
         tokens = response.json()
         expires_at = datetime.timestamp(datetime.utcnow()) + tokens["expires_in"]
         tokens["expires_at"] = expires_at
+        tokens["expires_datetime"] = datetime.fromtimestamp(expires_at)
         self.tokens = tokens
         file_with_tokens = f'secrets/tokens.py'
         with open(file_with_tokens, 'w', encoding='utf-8') as file:

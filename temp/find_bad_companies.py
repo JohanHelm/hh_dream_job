@@ -24,7 +24,7 @@ headers = {'Authorization': f'Bearer {tokens["access_token"]}'}
 
 search_params = {"page": 0,
                    "per_page": 100,
-                   "text": "Центр финансовых технологий",
+                   "text": "Алгоритмика Б",
                    "search_field": "company_name",
                    }
 
@@ -34,8 +34,9 @@ session.params = search_params
 
 response: Response = session.get(url)
 result = response.json()
-vacancies = result["items"]
-print(result["found"])
+print(result)
+# vacancies = result["items"]
+# print(result["found"])
 
 bad_company_names = ('Компьютерная Академия Top',
                      'Компьютерная Академия IT STEP',
@@ -63,15 +64,37 @@ bad_company_names = ('Компьютерная Академия Top',
                      'Nexpanse',
                      'DocuSketch',
                      'JustCode',
-                     'Центр финансовых технологий'
+                     'Центр финансовых технологий',
+                     'Kiberone (ИП Евсенин Алексей Сергеевич)',
+                     'KIBERone (ИП Григорян Николай Ашотович)',
+                     'KIBERone (ИП Демиденко Анастасия Юрьевна)',
+                     'KIBERone (ИП Павловский Станислав Александрович)',
+                     'KIBERONE (ИП Модова Юлия Викторовна)',
+                     'KiberOne (ИП Зивтинь Мария Олеговна)',
+                     'KiberOne (Ип Новосельцев Сергей Александрович)',
+                     'KIBERONE (ИП Модова Юлия Викторовна)',
+                     'KIBERone (ИП Пальцева Татьяна Викторовна)',
+                     'KIBERone (Митрофанова Ксения Владимировна)',
+                     'KIBERone (ИП Коростелева Татьяна Олеговна)',
+                     'KIBERone (ИП Янкевич Олег Станиславович)',
+                     'KIBERone (ИП Ерошкин Данил Сергеевич)',
+                     'KiberOne (ИП Докучаева Юлия Викторовна)',
+                     'KIBERone (ИП Белоусова Олеся Сергеевна)',
+                     'KIBERone (ИП Лисицкий Ян Сергеевич)',
+                     'KIBERone (ИП Решетникова Валерия Николаевна)',
+                     'KIBERone Aksay (Баймуканов А. С)',
+                     'КиберШкола KIBERone (ИП Коваленко Дмитрий Валерьевич)',
+                     'Школа иновации Новое поколение',
+                     'АЙТИ ШАГ',
+                     'Алгоритмика Б'
                      )
 
-for vacancy in result["items"]:
-    print(vacancy['employer'])
-    print(vacancy['name'])
-    print()
-    if vacancy['employer']['name'] in bad_company_names:
-        bad_companies_set.add(vacancy['employer']['id'])
+# for vacancy in result["items"]:
+#     print(vacancy['employer'])
+#     print(vacancy['name'])
+#     print()
+#     if vacancy['employer']['name'] in bad_company_names:
+#         bad_companies_set.add(vacancy['employer']['id'])
 
 
 print(len(bad_companies_set))
