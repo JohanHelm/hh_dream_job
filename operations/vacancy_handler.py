@@ -32,7 +32,7 @@ class ApplicantManager:
             logger.info(f"found by {params.search_mode} search {result['found']} vacancies in {result['pages']} pages")
             self.pages_found = result["pages"]
             self.vacancy_list = result["items"]
-        elif response.status_code in (400, 404):
+        elif response.status_code in (400, 403, 404):
             logger.warning(f"failure to search in {params.search_mode} with response {response}")
             with open(f'search_{params.search_mode}_vacancy_errors.json', 'w') as file:
                 file.write(f"{datetime.utcnow()}\n")

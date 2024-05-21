@@ -24,7 +24,7 @@ headers = {'Authorization': f'Bearer {tokens["access_token"]}'}
 
 search_params = {"page": 0,
                    "per_page": 100,
-                   "text": "Алгоритмика Б",
+                   "text": "Tibbo",
                    "search_field": "company_name",
                    }
 
@@ -34,9 +34,9 @@ session.params = search_params
 
 response: Response = session.get(url)
 result = response.json()
-print(result)
-# vacancies = result["items"]
-# print(result["found"])
+# print(result)
+vacancies = result["items"]
+print(result["found"])
 
 bad_company_names = ('Компьютерная Академия Top',
                      'Компьютерная Академия IT STEP',
@@ -86,15 +86,16 @@ bad_company_names = ('Компьютерная Академия Top',
                      'КиберШкола KIBERone (ИП Коваленко Дмитрий Валерьевич)',
                      'Школа иновации Новое поколение',
                      'АЙТИ ШАГ',
-                     'Алгоритмика Б'
+                     'Алгоритмика Б',
+                     'Tibbo'
                      )
 
-# for vacancy in result["items"]:
-#     print(vacancy['employer'])
-#     print(vacancy['name'])
-#     print()
-#     if vacancy['employer']['name'] in bad_company_names:
-#         bad_companies_set.add(vacancy['employer']['id'])
+for vacancy in result["items"]:
+    print(vacancy['employer'])
+    print(vacancy['name'])
+    print()
+    if vacancy['employer']['name'] in bad_company_names:
+        bad_companies_set.add(vacancy['employer']['id'])
 
 
 print(len(bad_companies_set))
