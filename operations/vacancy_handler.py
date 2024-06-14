@@ -46,7 +46,7 @@ class ApplicantManager:
         logger.info(f"we got {len(self.vacancy_list)} not applied vacancies yet")
 
     def remove_bad_companies(self):
-        self.vacancy_list = list(filter(lambda x: x["employer"]["id"] not in self.bad_companies, self.vacancy_list))
+        self.vacancy_list = list(filter(lambda x: x["employer"]["name"] not in self.bad_companies, self.vacancy_list))
         logger.info(f"we got {len(self.vacancy_list)} vacancies from good companies")
 
     def add_to_favorite_with_test(self):

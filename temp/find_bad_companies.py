@@ -24,9 +24,9 @@ headers = {'Authorization': f'Bearer {tokens["access_token"]}'}
 
 search_params = {"page": 0,
                    "per_page": 100,
-                   "text": "Tibbo",
+                   "text": "Пучкова Софья Денисовна",
                    "search_field": "company_name",
-                   }
+                 }
 
 session = Session()
 session.headers.update(headers)
@@ -83,11 +83,25 @@ bad_company_names = ('Компьютерная Академия Top',
                      'KIBERone (ИП Лисицкий Ян Сергеевич)',
                      'KIBERone (ИП Решетникова Валерия Николаевна)',
                      'KIBERone Aksay (Баймуканов А. С)',
+                     'K1berOne (ИП Гаюн Артем Сергеевич)',
                      'КиберШкола KIBERone (ИП Коваленко Дмитрий Валерьевич)',
+                     'Пучкова Софья Денисовна',
                      'Школа иновации Новое поколение',
                      'АЙТИ ШАГ',
                      'Алгоритмика Б',
-                     'Tibbo'
+                     'Tibbo',
+                     "Гилядов Гиляд Перисович",
+                     "Lenkep recruitment",
+                     "ДПО АЙТИСИТИ",
+                     "2дэй академи",
+                     "KoksheLab",
+                     "Смирнов Алексей Викторович",
+                     'Алгоритмика: Салехард (ИП Донгаев Анатолий Михайлович)',
+                     'Алгоритмика Челябинск Советский район',
+                     'Алгоритмика (ООО Юникод)',
+                     'Школа программирования Алгоритмика (ИП Кузьменко Екатерина Александровна)',
+                     'Мануспект',
+                     'PRO100Robot'
                      )
 
 for vacancy in result["items"]:
@@ -95,7 +109,8 @@ for vacancy in result["items"]:
     print(vacancy['name'])
     print()
     if vacancy['employer']['name'] in bad_company_names:
-        bad_companies_set.add(vacancy['employer']['id'])
+        bad_companies_set.add(vacancy['employer']['name'])
+    # bad_companies_set.add(vacancy['employer']['id'])
 
 
 print(len(bad_companies_set))
