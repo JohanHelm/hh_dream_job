@@ -23,6 +23,7 @@ class ApplicantManager:
         self.vacancy_list: list[dict] = []
         self.applied_set: set[str] = set()
         self.bad_companies: set[str] = set()
+        self.bad_vacancy_names: set[str] = set()
 
     def search_vacancy(self, params: Params):
         self.api_client.set_session_params(params.search_params)
@@ -48,6 +49,16 @@ class ApplicantManager:
     def remove_bad_companies(self):
         self.vacancy_list = list(filter(lambda x: x["employer"]["name"] not in self.bad_companies, self.vacancy_list))
         logger.info(f"we got {len(self.vacancy_list)} vacancies from good companies")
+
+    def check_vacancy_has_good_name(self, vacancy: dict[...]) -> bool:
+        for bad_name in self.bad_vacancy_names:
+            if bad_name in vacancy["name"].lower():
+                return False
+        return True
+
+    def remove_bad_vacancy_names(self):
+        self.vacancy_list = list(filter(self.check_vacancy_has_good_name, self.vacancy_list))
+        logger.info(f"we got {len(self.vacancy_list)} vacancies with good names")
 
     def add_to_favorite_with_test(self):
         vacancy_to_add = list(filter(lambda x: x["has_test"], self.vacancy_list))
@@ -95,6 +106,15 @@ class ApplicantManager:
                 self.bad_companies = pickle.load(file)
         logger.info(f"we got {len(self.bad_companies)} bad companies for now")
 
+    def unpickle_bad_vacancy_names(self):
+        filename = f"bad_vacancy_names.pickle"
+        fullfilepath = workdir.joinpath(filename)
+        if Path.exists(fullfilepath):
+            with open(fullfilepath, "rb") as file:
+                logger.info(f"open binary file {fullfilepath}")
+                self.bad_vacancy_names = pickle.load(file)
+        logger.info(f"we got {len(self.bad_vacancy_names)} bad vacancy names for now")
+
     def apply(self, letter: bool = False):
         self.api_client.set_session_params({"resume_id": resume_id})
         vacancies_to_apply = filter(lambda x: x["response_letter_required"] is letter, self.vacancy_list)
@@ -133,6 +153,7 @@ class ApplicantManager:
         self.search_vacancy(params)
         self.remove_already_applied()
         self.remove_bad_companies()
+        self.remove_bad_vacancy_names()
         self.add_to_favorite_with_test()
         self.apply()
         self.apply(letter=True)
@@ -140,6 +161,7 @@ class ApplicantManager:
     def run(self):
         self.unpickle_applied()
         self.unpickle_bad_companies()
+        self.unpickle_bad_vacancy_names()
         while self.apply_counter < self.apply_limit:
             logger.info(f"starting {self.search_step} step with {self.apply_counter} apply_counter")
             try:

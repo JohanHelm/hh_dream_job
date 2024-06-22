@@ -19,13 +19,13 @@ else:
 
 print(len(bad_companies_set))
 
-url = "https://api.hh.ru/vacancies"
+url = "https://api.hh.ru/employers"
 headers = {'Authorization': f'Bearer {tokens["access_token"]}'}
 
 search_params = {"page": 0,
-                   "per_page": 100,
-                   "text": "Пучкова Софья Денисовна",
-                   "search_field": "company_name",
+                 "per_page": 100,
+                 "text": "English Zone",
+                 # "search_field": "company_name",
                  }
 
 session = Session()
@@ -34,9 +34,12 @@ session.params = search_params
 
 response: Response = session.get(url)
 result = response.json()
-# print(result)
-vacancies = result["items"]
-print(result["found"])
+
+companies = result["items"]
+for company in companies:
+    print(company)
+    bad_companies_set.add(company['name'])
+
 
 bad_company_names = ('Компьютерная Академия Top',
                      'Компьютерная Академия IT STEP',
@@ -96,6 +99,7 @@ bad_company_names = ('Компьютерная Академия Top',
                      "2дэй академи",
                      "KoksheLab",
                      "Смирнов Алексей Викторович",
+                     'Алгоритмика: Красногорск, р-н Павшинская Пойма (ИП Боос Анастасия Александровна)',
                      'Алгоритмика: Салехард (ИП Донгаев Анатолий Михайлович)',
                      'Алгоритмика Челябинск Советский район',
                      'Алгоритмика (ООО Юникод)',
@@ -103,15 +107,6 @@ bad_company_names = ('Компьютерная Академия Top',
                      'Мануспект',
                      'PRO100Robot'
                      )
-
-for vacancy in result["items"]:
-    print(vacancy['employer'])
-    print(vacancy['name'])
-    print()
-    if vacancy['employer']['name'] in bad_company_names:
-        bad_companies_set.add(vacancy['employer']['name'])
-    # bad_companies_set.add(vacancy['employer']['id'])
-
 
 print(len(bad_companies_set))
 
