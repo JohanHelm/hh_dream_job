@@ -18,13 +18,13 @@ else:
     bad_companies_set = set()
 
 print(len(bad_companies_set))
-
+print(*sorted(bad_companies_set), sep="\n")
 url = "https://api.hh.ru/employers"
 headers = {'Authorization': f'Bearer {tokens["access_token"]}'}
 
 search_params = {"page": 0,
                  "per_page": 100,
-                 "text": "English Zone",
+                 "text": "СибГМУ",
                  # "search_field": "company_name",
                  }
 
@@ -105,7 +105,8 @@ bad_company_names = ('Компьютерная Академия Top',
                      'Алгоритмика (ООО Юникод)',
                      'Школа программирования Алгоритмика (ИП Кузьменко Екатерина Александровна)',
                      'Мануспект',
-                     'PRO100Robot'
+                     'PRO100Robot',
+                     'СибГМУ'
                      )
 
 print(len(bad_companies_set))

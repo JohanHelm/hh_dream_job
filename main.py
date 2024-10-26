@@ -5,6 +5,7 @@ from api_requests.api_querry import ApiClient
 from utils.tokens_handler import TokensHandler
 from utils.basic_params import duration
 from operations.vacancy_handler import ApplicantManager
+from operations.applies_ops import DiscardsRemover
 
 
 def main():
@@ -15,6 +16,8 @@ def main():
     tokens_handler = TokensHandler(api_client)
 
     if tokens_handler.check_valid_access_token():
+        discard_remover = DiscardsRemover(api_client)
+        discard_remover.run()
         vacancy_manager = ApplicantManager(api_client)
         vacancy_manager.run()
     else:
