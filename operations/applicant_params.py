@@ -8,21 +8,54 @@ Params = namedtuple('Params', ('search_mode', 'search_url', 'search_params'))
 similar_search_url = f"{basic_url}/resumes/{resume_id}/similar_vacancies"
 common_search_url = f"{basic_url}/vacancies"
 
+search_text = "Python"
+
+search_field = (
+    "name",
+    "description",
+)
+
+experience = (
+    "between1And3",
+)
+
+employment = (
+    "full",
+    "part",
+    "project",
+)
+
+schedule = (
+    "fullDay",
+    "shift",
+    "flexible",
+    "remote"
+)
+
+area = {
+    "Russia": 113,
+    "Tomsk area": 1255,
+    "Tomsk": 90,
+}
+
+professional_role = {
+    "Программист, разработчик": 96 ,
+    "DevOps-инженер": 160,
+    "Тестировщик": 124,
+    "Сетевой инженер": 112,
+    "Системный администратор": 113,
+    "Специалист технической поддержки": 121,
+}
+
 full_search_params = {"page": 0,
                       "per_page": 100,
-                      "text": "Python",
+                      "text": search_text,
                       "search_field": ("name", "description"),
-                      "experience": ("noExperience", "between1And3"),
-                      "employment": ("full", "part", "project"),
-                      "schedule": ("fullDay", "shift", "flexible", "remote"),
-                      "area": 113,  # Russia 113, Tomsk area 1255, Tomsk 90,
-                      "professional_role": (96, 160, 124, 112, 113, 121),
-                      # {'96': 'Программист, разработчик',
-                      # '160': 'DevOps-инженер',
-                      # '124': 'Тестировщик',
-                      # '112': 'Сетевой инженер',
-                      # '113': 'Системный администратор',
-                      # '121': 'Специалист технической поддержки'}
+                      "experience": experience,
+                      "employment": employment,
+                      "schedule": schedule,
+                      "area": area,
+                      "professional_role": professional_role.values(),
                       "period": 30,
                       "order_by": "publication_time",
                       }
@@ -30,63 +63,74 @@ full_search_params = {"page": 0,
 # params for similar search
 search_params_1 = {"page": 0,
                    "per_page": 100,
-                   "text": "Python",
+                   "text": search_text,
                    "search_field": ("name", "description"),
-                   "experience": ("noExperience", "between1And3"),
+                   "experience": experience,
                    "order_by": "publication_time",
                    }
 
 # params for similar search
 search_params_2 = {"page": 0,
                    "per_page": 100,
-                   "professional_role": (96, 160, 124),
-                   "experience": ("noExperience", "between1And3"),
+                   "professional_role": (
+                       professional_role["Программист, разработчик"],
+                       professional_role["DevOps-инженер"],
+                       professional_role["Тестировщик"],
+                   ),
+                   "experience": experience,
                    "order_by": "publication_time",
                    }
 
 # first common search
 search_params_3 = {"page": 0,
                    "per_page": 100,
-                   "text": "Python",
+                   "text": search_text,
                    "search_field": ("name", "description"),
-                   "experience": ("noExperience", "between1And3"),
-                   "area": 1255,
-                   "professional_role": (96, 160, 124),
+                   "experience": experience,
+                   "area": area["Tomsk area"],
+                   "professional_role": (
+                       professional_role["Программист, разработчик"],
+                       professional_role["DevOps-инженер"],
+                       professional_role["Тестировщик"],
+                   ),
                    "order_by": "publication_time",
                    }
 
 # second common search
 search_params_4 = {"page": 0,
                    "per_page": 100,
-                   "text": "Python",
+                   "text": search_text,
                    "search_field": ("name", "description"),
-                   "experience": ("noExperience", "between1And3"),
-                   "employment": ("full", "part", "project"),
+                   "experience": experience,
+                   "employment": employment,
                    "schedule": ("flexible", "remote"),
-                   "professional_role": 96,
+                   "professional_role": professional_role["Программист, разработчик"],
                    "order_by": "publication_time",
                    }
 
 # third common search
 search_params_5 = {"page": 0,
                    "per_page": 100,
-                   "text": "Python",
+                   "text": search_text,
                    "search_field": ("name", "description"),
-                   "experience": ("noExperience", "between1And3"),
-                   "employment": ("full", "part", "project"),
+                   "experience": experience,
+                   "employment": employment,
                    "schedule": ("flexible", "remote"),
-                   "professional_role": (160, 124),
+                   "professional_role": (
+                       professional_role["DevOps-инженер"],
+                       professional_role["Тестировщик"],
+                   ),
                    "order_by": "publication_time",
                    }
 
 # third common search
 search_params_6 = {"page": 0,
                    "per_page": 100,
-                   "text": "Python",
+                   "text": search_text,
                    "search_field": ("name", "description"),
-                   "experience": ("noExperience", "between1And3"),
-                   "employment": ("full", "part", "project"),
-                   "professional_role": 96,
+                   "experience": experience,
+                   "employment": employment,
+                   "professional_role": professional_role["Программист, разработчик"],
                    "order_by": "publication_time",
                    }
 
