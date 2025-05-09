@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Any
 
 from loguru import logger
@@ -34,12 +34,19 @@ class DiscardsRemover:
                 self.found = result['found']
                 self.remove_discarded_applies(result["items"])
 
-            elif response.status_code in (400, 403, 404):
+            elif response.status_code in (400, 404):
                 logger.warning(f"failure to search in discard apply search with response {response}")
                 with open(f'search_discard_apply_errors.json', 'w') as file:
-                    file.write(f"{datetime.utcnow()}\n")
+                    file.write(f"{datetime.now(UTC)}\n")
                     json.dump(response.json(), file, separators=(',\n', ': '))
                     file.write("\n\n")
+            elif response.status_code in 403:
+                logger.warning(f"failure to search in discard apply search with response {response}")
+                with open(f'search_discard_apply_errors.json', 'w') as file:
+                    file.write(f"{datetime.now(UTC)}\n")
+                    json.dump(response.json(), file, separators=(',\n', ': '))
+                    file.write("\n\n")
+                self.found = 0
             else:
                 logger.warning(f"failure to search in discard apply search with response {response}")
 
@@ -51,7 +58,7 @@ class DiscardsRemover:
             elif response.status_code in (425, 403, 404):
                 logger.warning(f"failure to remove discarded apply with response {response}")
                 with open(f'remove_discard_apply_errors.json', 'w') as file:
-                    file.write(f"{datetime.utcnow()}\n")
+                    file.write(f"{datetime.now(UTC)}\n")
                     json.dump(response.json(), file, separators=(',\n', ': '))
                     file.write("\n\n")
             else:

@@ -1,6 +1,6 @@
 import json
 import pickle
-from datetime import datetime
+from datetime import datetime, UTC
 from pathlib import Path
 
 from loguru import logger
@@ -36,7 +36,7 @@ class ApplicantManager:
         elif response.status_code in (400, 403, 404):
             logger.warning(f"failure to search in {params.search_mode} with response {response}")
             with open(f'search_{params.search_mode}_vacancy_errors.json', 'w') as file:
-                file.write(f"{datetime.utcnow()}\n")
+                file.write(f"{datetime.now(UTC)}\n")
                 json.dump(response.json(), file, separators=(',\n', ': '))
                 file.write("\n\n")
         else:
@@ -73,7 +73,7 @@ class ApplicantManager:
             elif response.status_code in (403, 404):
                 logger.warning(f"fail to add {vacancy['id']} to favorites")
                 with open('add_to_favorite_with_test_errors.json', 'w') as file:
-                    file.write(f"{datetime.utcnow()}\n")
+                    file.write(f"{datetime.now(UTC)}\n")
                     json.dump(response.json(), file, separators=(',\n', ': '))
                     file.write("\n\n")
             else:
@@ -141,7 +141,7 @@ class ApplicantManager:
                 else:
                     logger.warning(f"failure to appy vacancy {vacancy['id']} with response {response}")
                     with open('apply_errors.json', 'a') as file:
-                        file.write(f"{datetime.utcnow()}\n")
+                        file.write(f"{datetime.now(UTC)}\n")
                         file.write(f"{vacancy['id']}\n")
                         json.dump(result, file, separators=(',\n', ': '))
                         file.write("\n\n")

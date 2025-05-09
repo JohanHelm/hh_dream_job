@@ -6,6 +6,7 @@ from utils.tokens_handler import TokensHandler
 from utils.basic_params import duration
 from operations.vacancy_handler import ApplicantManager
 from operations.applies_ops import DiscardsRemover
+from operations.favorites_ops import FavoritesHandler
 
 
 def main():
@@ -18,6 +19,8 @@ def main():
     if tokens_handler.check_valid_access_token():
         discard_remover = DiscardsRemover(api_client)
         discard_remover.run()
+        favorites_handler = FavoritesHandler(api_client)
+        favorites_handler.run()
         vacancy_manager = ApplicantManager(api_client)
         vacancy_manager.run()
     else:
